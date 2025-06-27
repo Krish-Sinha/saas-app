@@ -24,10 +24,12 @@ import {
 import { Input } from "@/components/ui/input"
 import { subjects } from '@/constants'
 import { Textarea } from './ui/textarea'
+import { redirect } from 'next/navigation'
+import { createCompanion } from '@/lib/actions/companion.actions'
 
 const formSchema = z.object({
   name: z.string().min(1,{message:'Companion is required'}),
-  subjects: z.string().min(1,{message:'Subject is required'}),
+  subject: z.string().min(1,{message:'Subject is required'}),
   voice: z.string().min(1,{message:'Voice is required'}),
   style: z.string().min(1,{message:'Style is required'}),
   topic: z.string().min(1,{message:'Topic is required'}),
@@ -40,7 +42,7 @@ export const CompanionForm = () => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
-      subjects: "",
+      subject: "",
       topic: "",
       voice: "",
       style: "",
@@ -49,10 +51,16 @@ export const CompanionForm = () => {
   })
  
   // 2. Define a submit handler.
-  const onSubmit=(values: z.infer<typeof formSchema>)=> {
-    
-    console.log(values)
-  }
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+        const companion = await createCompanion(values);
+
+        if(companion) {
+            redirect(`/companions/${companion.id}`);
+        } else {
+            console.log('Failed to create a companion');
+            redirect('/');
+        }
+    }
   return (
      <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -74,7 +82,7 @@ export const CompanionForm = () => {
 
         <FormField
           control={form.control}
-          name="subjects"
+          name="subject"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Subject</FormLabel>

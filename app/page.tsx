@@ -50,3 +50,6 @@ const Page = () => {
 }
 
 export default Page
+
+
+//supabase password:5A465uYJtGZDvj#
