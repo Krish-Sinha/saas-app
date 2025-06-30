@@ -46,7 +46,7 @@ export const CompanionForm = () => {
       topic: "",
       voice: "",
       style: "",
-      duration: 15,
+      duration: 12,
     },
   })
  
